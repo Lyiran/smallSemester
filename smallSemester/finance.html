@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta charset="UTF-8">
+	<title>finance</title>
+	<link rel="stylesheet" type="text/css" href="style/style.css">
+</head>
+<body>
+	<div id="wrap">
+		<a href="javascript:;"></a>
+		<div class="finance">
+			<label for="">消费：</label><input id="consume" type="text">
+			<label for="">收入：</label><input id="income" type="text">
+			<label for="">余额：</label><input id="blance" type="text" value="">
+			<p><a id="record" href="javascript:;">记录</a></p>
+			<p><a class="re-turn" href="index.html">返回主页</a></p>
+			<table cellspacing="0" id="tab" class="finance-list" border="1">
+				<thead>
+					<td>日期</td>
+					<td>消费(元)</td>
+					<td>收入(元)</td>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<script>
+		window.onload=function(){
+			var oTab=document.getElementById("tab");
+			var oConsume=document.getElementById("consume");
+			var oIncome=document.getElementById("income");
+			var oBlance=document.getElementById("blance");
+			var oRecord=document.getElementById("record");
+			var id=oTab.tBodies[0].rows.length;//记录当前tr数量
+			oRecord.onclick=function(){
+				if(oConsume.value==""){
+					alert("消费记录不能为空！");
+				}
+				else if(oIncome.value==""){
+					alert("收入记录不能为空！");
+				}
+				else{
+					var sumBlance=0;
+					var oTr=document.createElement("tr");
+
+					var oTd=document.createElement("td");
+
+					oTd.innerHTML=tick();
+					oTr.appendChild(oTd);
+
+					var oTd=document.createElement("td");
+					oTd.innerHTML=oConsume.value;
+					oTr.appendChild(oTd);
+
+					var oTd=document.createElement("td");
+					oTd.innerHTML=oIncome.value;
+					oTr.appendChild(oTd);
+
+					if(Number(oIncome.value)-Number(oConsume.value)<=0){
+						oBlance.value=0;
+					}
+					else{
+						sumBlance=Number(oIncome.value)-Number(oConsume.value);
+						oBlance.value=sumBlance+Number(oBlance.value);
+					}
+					oTab.tBodies[0].appendChild(oTr);
+					//添加记录后清零
+					if(oTab.tBodies[0].rows.length>id){
+						oConsume.value="";
+						oIncome.value="";
+					}
+				}
+
+				return false;
+			};
+			//获取时间
+			var tick=function(){
+				var oDate=new Date;
+				var time;
+				var hh=toDouble(oDate.getHours());//获取小时
+				var mm=toDouble(oDate.getMinutes());//获取分钟
+				var ss=toDouble(oDate.getSeconds());//获取秒
+				var yy=oDate.getFullYear();//获取年份
+				var moth=toDouble(oDate.getMonth()+1);//获取月份（加1，因为1月返回的是0）
+				var dd=oDate.getDate();//获取日数
+
+				var week=oDate.getDay();//周（0~~6其0表示周天）
+				var days=["日","一","二","三","四","五","六",]
+				time=yy+"年"+moth+"月"+dd+"日"+"星期"+days[week]+"--"+hh+":"+mm+":"+ss;
+				return time;
+			}
+			setInterval(tick,1000);
+			function toDouble(n){
+				if(n<10){
+					return "0"+n;
+				}
+				else{
+					return ""+n;
+				}
+			}
+		};
+	</script>
+</body>
+</html>
